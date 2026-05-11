@@ -116,10 +116,6 @@ Using Keil Flash Tool:
 Flash → Download  (or press F8)
 ```
 
-Using STM32CubeProgrammer:
-```
-Open the generated .hex file and click Download.
-```
 
 ---
 
