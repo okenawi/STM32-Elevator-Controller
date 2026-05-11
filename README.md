@@ -19,6 +19,7 @@ This project simulates a real-world multi-floor elevator with intelligent floor 
   - [Safety Features](#safety-features)
   - [LCD States](#lcd-states)
   - [Audio System](#audio-system)
+- [Mobile App](#-mobile-app-bluetooth-remote)
 - [Embedded Systems Concepts](#-embedded-systems-concepts)
 
 ---
@@ -85,7 +86,7 @@ This project simulates a real-world multi-floor elevator with intelligent floor 
 
 ## 💾 Software Requirements
 
-- [Keil µVision](https://www.keil.com/download/product/)
+- Keil µVision
 - ST-Link V2 driver
 - ARM Compiler (bundled with Keil)
 
@@ -159,10 +160,7 @@ Elevator moving:  Floor 0 ──────────────────
                          Continues to Floor 2 ✅
 ```
 
-**Benefits:**
-- ⏱️ Reduced waiting time
-- ⚡ Better energy efficiency
-- 🏢 Realistic elevator behavior
+
 
 ---
 
@@ -206,6 +204,87 @@ The **DFPlayer Mini** module handles all audio playback:
 
 ---
 
+## 📱 Mobile App — Bluetooth Remote
+
+A companion Android app built with **Kotlin + Jetpack Compose** that communicates with the elevator over Bluetooth Classic (HC-05 / RFCOMM).
+
+### Features
+
+| Feature | Details |
+|---|---|
+| 🔵 Bluetooth Pairing | Scans bonded devices and connects via RFCOMM UUID |
+| 🎙️ Voice Control | Speak a floor number — the app parses it and sends the command |
+| 🏢 Animated Shaft | Real-time elevator car animation reflecting the active floor |
+| 🔘 Floor Buttons | Tap buttons 0 / 1 / 2 to send floor commands instantly |
+| 🎨 Dark UI | Glassmorphism dark theme with cyan glow accents |
+
+### How It Works
+
+```
+User Action
+    │
+    ├─ Tap floor button ──────────────────────► sendData("N")
+    │                                                │
+    └─ Press mic → speak "floor two" ────────► SpeechRecognizer
+                                                     │
+                                               parse spoken word
+                                                     │
+                                               sendData("2")
+                                                     │
+                                         Write byte to BT socket
+                                                     │
+                                          STM32 receives command
+                                                     │
+                                           Elevator moves to floor
+```
+
+### Voice Recognition
+
+The app uses Android's built-in `SpeechRecognizer`. Recognized words are matched against floor names:
+
+| Spoken Word | Command Sent |
+|---|---|
+| "zero" / "0" | `0` |
+| "one" / "1" | `1` |
+| "two" / "2" | `2` |
+
+### Connection Flow
+
+```
+App Launch
+    │
+    └─ Request permissions (BLUETOOTH_CONNECT, BLUETOOTH_SCAN, RECORD_AUDIO)
+            │
+            └─ Load paired devices from BluetoothAdapter
+                    │
+                    └─ User selects HC-05 → tap Connect
+                            │
+                            └─ createRfcommSocketToServiceRecord()
+                                    │
+                                    └─ socket.connect() on IO coroutine
+                                            │
+                                            └─ isConnected = true ✅
+```
+
+### Tech Stack
+
+- **Language:** Kotlin
+- **UI:** Jetpack Compose + Material 3
+- **Bluetooth:** `BluetoothSocket` over RFCOMM (SPP profile)
+- **Concurrency:** Kotlin Coroutines (`Dispatchers.IO` for socket I/O)
+- **Speech:** Android `SpeechRecognizer` API
+- **Animations:** `animateFloatAsState`, `animateColorAsState`, `animateDpAsState`
+
+### Required Permissions (`AndroidManifest.xml`)
+
+```xml
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
+
+---
+
 ## 🧩 Embedded Systems Concepts
 
 ### GPIO Register Programming
@@ -243,7 +322,6 @@ The system uses a **continuous polling loop** instead of interrupt-driven I/O. T
 This approach provides **responsive real-time behavior** without requiring NVIC interrupt configuration.
 
 ---
-
 
 
 <p align="center">Built with ❤️ in ARM Assembly on STM32</p>
