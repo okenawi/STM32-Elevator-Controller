@@ -1,8 +1,8 @@
 # 🏢 STM32 Smart Elevator System
 
-> A fully embedded smart elevator system built with the **STM32F103C8T6 Blue Pill** microcontroller and programmed entirely in **ARM Assembly language**.
+> A fully embedded smart elevator system built with the **STM32F103C8T6 Blue Pill** microcontroller and programmed entirely in **ARM Assembly language** for our Microprocessor Systems Course.
 
-This project simulates a real-world multi-floor elevator with intelligent floor scheduling, RFID security access, Bluetooth control, voice announcements, overload protection, LCD feedback, and automated door control — all implemented from bare metal with no HAL libraries.
+This project simulates a real-world multi-floor elevator with intelligent floor scheduling, RFID security access, Bluetooth control, voice announcements, overload protection, LCD feedback, and automated door control, all implemented from bare metal.
 
 ---
 
