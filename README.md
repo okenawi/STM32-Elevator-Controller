@@ -4,7 +4,7 @@
 
 This project simulates a real-world multi-floor elevator with intelligent floor scheduling, RFID security access, Bluetooth control, voice announcements, overload protection, LCD feedback, and automated door control, all implemented from bare metal.
 
----
+--- 
 
 ## 📋 Table of Contents
 
